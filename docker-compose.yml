@@ -1,33 +1,48 @@
-services:
-  inventory-api:
-    build:
-      context: ./InventoryStockApi.Api
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    environment:
-      - DOTNET_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=InventoryStockDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
-    depends_on:
-      sqlserver:
-        condition: service_healthy
+version: '3.9'
 
+services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 15s
     volumes:
       - sqlserver-data:/var/opt/mssql
+
+  inventory-stock-api:
+    build:
+      context: ./InventoryStockApi.Api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=InventoryStockDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  inventory-api:
+    build:
+      context: ./InventoryStockApi.Api   
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=InventoryDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
 
 volumes:
   sqlserver-data:
