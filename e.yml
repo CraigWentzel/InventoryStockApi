@@ -1,0 +1,12 @@
+[1mdiff --git a/InventoryStockApi.Api/appsettings.json b/InventoryStockApi.Api/appsettings.json[m
+[1mindex 71c96ff..d183c19 100644[m
+[1m--- a/InventoryStockApi.Api/appsettings.json[m
+[1m+++ b/InventoryStockApi.Api/appsettings.json[m
+[36m@@ -1,6 +1,6 @@[m
+ {[m
+   "ConnectionStrings": {[m
+[31m-    "DefaultConnection": "Server=CRAIG-WENTZEL\\SQLEXPRESS;Database=InventoryStockDb;Trusted_Connection=True;TrustServerCertificate=True;"[m
+[32m+[m[32m    "DefaultConnection": "Server=localhost;Database=InventoryStockDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"[m
+   },[m
+   "Logging": {[m
+     "LogLevel": {[m

@@ -1,15 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
-namespace InventoryStockApi.Api.Data;
-
-public class InventoryDbContextFactory : IDesignTimeDbContextFactory<InventoryDbContext>
+namespace InventoryStockApi.Api.Data
 {
-    public InventoryDbContext CreateDbContext(string[] args)
+    public class InventoryDbContextFactory : IDesignTimeDbContextFactory<InventoryDbContext>
     {
-        var optionsBuilder = new DbContextOptionsBuilder<InventoryDbContext>();
-        optionsBuilder.UseSqlServer("Server=CRAIG-WENTZEL\\SQLEXPRESS;Database=InventoryStockDb;Trusted_Connection=True;TrustServerCertificate=True;");
+        public InventoryDbContext CreateDbContext(string[] args)
+        {
+            // Load configuration from appsettings.json
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-        return new InventoryDbContext(optionsBuilder.Options);
+            var optionsBuilder = new DbContextOptionsBuilder<InventoryDbContext>();
+            optionsBuilder.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+
+            return new InventoryDbContext(optionsBuilder.Options);
+        }
     }
 }
