@@ -20,7 +20,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-// Always enable Swagger (not just in Development)
+// Always enable Swagger (Production + Development)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
