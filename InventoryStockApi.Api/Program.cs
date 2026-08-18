@@ -20,15 +20,13 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+// Always enable Swagger (not just in Development)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "InventoryStockApi v1");
     c.RoutePrefix = "swagger"; // ensures /swagger works
 });
-}
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
