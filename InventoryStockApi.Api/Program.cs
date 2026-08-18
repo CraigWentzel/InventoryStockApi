@@ -4,6 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,15 +21,23 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-// Always enable Swagger (Production + Development)
+// Swagger always enabled (Development + Production)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "InventoryStockApi v1");
-    c.RoutePrefix = "swagger"; // ensures /swagger works
+    c.RoutePrefix = "swagger"; // UI available at /swagger/index.html
 });
 
-app.UseHttpsRedirection();
+// Remove HTTPS redirection for Render (proxy already handles HTTPS)
+// app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
+// Map controllers
 app.MapControllers();
+
+// Add a friendly root endpoint
+app.MapGet("/", () => "InventoryStockApi is running. Visit /swagger for API docs.");
+
 app.Run();
