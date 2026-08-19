@@ -2,10 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-COPY ["InventoryStockApi.Api.csproj", "./"]
-RUN dotnet restore "InventoryStockApi.Api.csproj"
+COPY ["InventoryStockApi.Api/InventoryStockApi.Api.csproj", "InventoryStockApi.Api/"]
+RUN dotnet restore "InventoryStockApi.Api/InventoryStockApi.Api.csproj"
 
 COPY . .
+WORKDIR /src/InventoryStockApi.Api
 RUN dotnet build "InventoryStockApi.Api.csproj" -c Release -o /app/build
 
 # Publish stage
