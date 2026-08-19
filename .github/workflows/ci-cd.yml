@@ -49,9 +49,6 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    
       - name: Trigger Render deploy
-<<<<<<< Updated upstream
         run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
-=======
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
->>>>>>> Stashed changes
